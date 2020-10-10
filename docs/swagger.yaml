@@ -1,0 +1,86 @@
+basePath: /datashare
+definitions:
+  httputil.HTTPError:
+    properties:
+      code:
+        example: 400
+        type: integer
+      message:
+        example: status bad request
+        type: string
+    type: object
+  model.SearchResponse:
+    properties:
+      code:
+        example: 200
+        format: int32
+        type: integer
+      flowId:
+        format: string
+        type: string
+      message:
+        example: Search Success
+        format: string
+        type: string
+      txId:
+        format: string
+        type: string
+    type: object
+  model.SearchSql:
+    properties:
+      consumerId:
+        example: "202009021838"
+        format: string
+        type: string
+      dumpId:
+        type: string
+      providerId:
+        example: "202009021840"
+        format: string
+        type: string
+      sql:
+        example: select * from t_aos;
+        format: string
+        type: string
+      text:
+        example: 美国国家科学院
+        format: string
+        type: string
+    type: object
+host: localhost:10086
+info:
+  contact:
+    email: liweihang@mingbyte.com
+    name: 铭数区块链
+  description: 铭数数据共享平台v1.0 Api
+  license: {}
+  title: DataShare Api
+  version: "1.0"
+paths:
+  /querySql:
+    post:
+      consumes:
+      - application/json
+      description: 根据sql语句查询对应结果
+      parameters:
+      - description: 根据sql查询结果
+        in: body
+        name: searchSql
+        required: true
+        schema:
+          $ref: '#/definitions/model.SearchSql'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询结果集，包括flowID、txID
+          schema:
+            $ref: '#/definitions/model.SearchResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/httputil.HTTPError'
+      summary: 查询sql语句
+      tags:
+      - 数据
+swagger: "2.0"

@@ -1,0 +1,123 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "铭数数据共享平台v1.0 Api",
+        "title": "DataShare Api",
+        "contact": {
+            "name": "铭数区块链",
+            "email": "liweihang@mingbyte.com"
+        },
+        "license": {},
+        "version": "1.0"
+    },
+    "host": "localhost:10086",
+    "basePath": "/datashare",
+    "paths": {
+        "/querySql": {
+            "post": {
+                "description": "根据sql语句查询对应结果",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "数据"
+                ],
+                "summary": "查询sql语句",
+                "parameters": [
+                    {
+                        "description": "根据sql查询结果",
+                        "name": "searchSql",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.SearchSql"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "查询结果集，包括flowID、txID",
+                        "schema": {
+                            "$ref": "#/definitions/model.SearchResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/httputil.HTTPError"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "httputil.HTTPError": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "example": 400
+                },
+                "message": {
+                    "type": "string",
+                    "example": "status bad request"
+                }
+            }
+        },
+        "model.SearchResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "format": "int32",
+                    "example": 200
+                },
+                "flowId": {
+                    "type": "string",
+                    "format": "string"
+                },
+                "message": {
+                    "type": "string",
+                    "format": "string",
+                    "example": "Search Success"
+                },
+                "txId": {
+                    "type": "string",
+                    "format": "string"
+                }
+            }
+        },
+        "model.SearchSql": {
+            "type": "object",
+            "properties": {
+                "consumerId": {
+                    "type": "string",
+                    "format": "string",
+                    "example": "202009021838"
+                },
+                "dumpId": {
+                    "type": "string"
+                },
+                "providerId": {
+                    "type": "string",
+                    "format": "string",
+                    "example": "202009021840"
+                },
+                "sql": {
+                    "type": "string",
+                    "format": "string",
+                    "example": "select * from t_aos;"
+                },
+                "text": {
+                    "type": "string",
+                    "format": "string",
+                    "example": "美国国家科学院"
+                }
+            }
+        }
+    }
+}

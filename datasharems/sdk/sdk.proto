@@ -1,0 +1,69 @@
+syntax = "proto3";
+
+// ChainCodeInfo 链码上存储的信息
+message ChainCodeData {
+  // 数据发送者ID
+  string SenderID = 1;
+  // 数据接收者ID
+  string ReceiverID = 2;
+  // 完成一次信息查询操作的唯一标识
+  string FlowID = 3;
+  // Type:是四个rpc service中的具体步骤
+  int32 RType = 4;
+  // hdfs path 文件存储平台地址：内容加密
+  string FilePath = 5;
+  // path hash 路径的hash值：保证数据一致性
+  string FileHash = 6;
+}
+
+// SaveInfo 请求
+message SaveInfoRequest {
+  ChainCodeData Data = 1;
+}
+
+// SaveInfo resp
+message SaveInfoResponse {
+    int32 Data = 1;
+    string Message = 2;
+}
+
+// GetInfo 请求
+message GetInfoRequest {
+  // 完成一次信息查询操作的唯一标识
+  string FlowId = 1;
+  // 每次请求数据的具体步骤
+  int32 rType = 2;
+}
+
+// GetInfo resp
+message GetInfoResponse {
+  repeated ChainCodeData Data = 1;
+}
+
+message InvokeRequest {
+  // chainCode 链码名称
+  string ChainCode = 1;
+  // 调用的func name
+  string FuncName = 2;
+  // args 参数
+  repeated string Args = 3;
+}
+
+message InvokeResponse {
+  // code status
+  int32 Code = 1;
+  // message
+  string Message = 2;
+  // payload info
+  string PayLoad = 3;
+}
+
+// sdk 提供的rpc服务
+service SDK {
+  // SaveInfo 信息上链
+  rpc SaveInfo(SaveInfoRequest) returns(SaveInfoResponse);
+  // GetInfo 从链码上获取信息
+  rpc GetInfo(GetInfoRequest) returns(GetInfoResponse);
+  // 通用的调用链码的方法
+  rpc Invoke(InvokeRequest) returns(InvokeResponse);
+}

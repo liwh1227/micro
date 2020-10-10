@@ -1,0 +1,197 @@
+syntax = "proto3";
+
+// GetCrySqlRequest sql查询请求
+message GetCrySqlRequest {
+  string ConsumerId = 1;
+  string ProviderId = 2;
+  // 查询sql
+  string Sql = 3;
+  // dumpID 数据集的id
+  string DumpId = 4;
+  // 查询描述，即数据集描述
+  string Text = 5;
+}
+
+message GetCrySqlResponse {
+  // 查询sql的整个flow的标识
+  string FlowId = 1;
+  // 链码返回的txID
+  string TxId = 2;
+  // Code 状态码
+  int32 Status = 3;
+  // Message
+  string Message = 4;
+}
+
+message GetDeResRequest {
+  string ConsumerId = 1;
+  string ProviderId = 2;
+  //  string CrySqlPath = 3;
+  string FlowId = 4;
+}
+
+message GetDeResResponse {
+  //  string DeResPath = 1;
+  //  string FlowId = 2;
+}
+
+message CrySqlRequest {
+  string ConsumerId = 1;
+  string ProviderId = 2;
+  //  string CrySqlPath = 3;
+  string FlowId = 4;
+}
+
+message CrySqlResponse {
+  //  string msg = 1;
+  //  int64 code = 2;
+  //  string CrySqlPath = 3;
+  //  string FlowId = 4;
+}
+
+message DeResRequest {
+  string ConsumerId = 1;
+  string ProviderId = 2;
+  //  string DeResPath = 3;
+  string FlowId = 4;
+}
+
+message DeResResponse {
+  //  string msg = 1;
+  //  int64 code = 2;
+  //  string FlowId = 3;
+}
+
+//== operate dumpcc
+message DumpInfoRequest {
+  string              DumpId           = 1;
+  string              DumpName         = 2;
+  string              OwnerId          = 3;
+  string              DumpHash         = 4;
+  string              DumpFilePath     = 5;
+  repeated string     Tags             = 6;
+  repeated string     Keywords         = 7;
+  string              Description      = 8;
+  repeated Table      Tables           = 9;
+}
+
+message Table {
+  string              TableUSName      = 1;
+  string              TableCNName      = 2;
+  string              TableType        = 3;
+  string              TableComments    = 4;
+  string              DataType         = 5;
+  string              DataPrice        = 6;
+  repeated string     TableDataExamples= 7;
+  repeated TableField TableFields      = 8;
+}
+
+message TableField {
+  bool                Key              = 1;
+  string              USName           = 2;
+  string              CNName           = 3;
+  string              Type             = 4;
+  string              Length           = 5;
+  string              Precision        = 6;
+  string              Comments         = 7;
+  string              Default          = 8;
+}
+
+message KeyDumpInfoRequest {
+  string              DumpId           = 1;
+  string              TableName        = 3;
+}
+
+message QueryDumpInfoByIdRequest {
+  string              DumpId           = 1;
+  int64               TablePageIndex   = 3;
+  int64               TablePageSize    = 4;
+}
+
+message QueryDumpInfoByKeywordsRequest {
+  string              Keywords         = 1;
+  int64               DumpPageIndex    = 2;
+  int64               DumpPageSize     = 3;
+}
+
+message QueryRecentlyDumpInfoRequest {
+  int64               DumpPageIndex    = 1;
+  int64               DumpPageSize     = 2;
+}
+
+message GetStepNumberRequest {
+  string              FlowId           = 1;
+}
+
+message QueryPurchasedRequest {
+  string              UserId           = 1;
+  int64               PageIndex        = 2;
+  int64               PageSize         = 3;
+}
+
+message QueryOwnerDumpInfoRequest {
+  string              OwnerId          = 1;
+  int64               DumpPageIndex    = 2;
+  int64               DumpPageSize     = 3;
+}
+
+message Response {
+  int64               Status           = 1;
+  string              Message          = 2;
+  string              Data             = 3;
+}
+
+message GetStepNumberResponse {
+  int64               Status           = 1;
+  string              Message          = 2;
+  int64               Data             = 3;
+}
+
+// sql查询返回结果接口request
+message ViewSqlResultRequest {
+  string FlowId = 1;
+}
+
+// sql查询返回结果response
+message ViewSqlResponse {
+  // sql
+  string              sql = 1;
+  // 列名结果
+  repeated string     Cols = 2;
+  // row结果
+  repeated            RowsData RowsData = 3;
+  int64               Status           = 4;
+  string              Message          = 5;
+}
+
+// sql查询结果集
+message RowsData {
+  repeated string RowValue = 1;
+}
+//==
+
+// 数据共享微服务接口
+service ShareData {
+  rpc GetCrySql(GetCrySqlRequest) returns (GetCrySqlResponse);
+  rpc GetDeRes(GetDeResRequest) returns (GetDeResResponse);
+  rpc CrySql(CrySqlRequest) returns (CrySqlResponse);
+  rpc DeRes(DeResRequest) returns (DeResResponse);
+
+  // operate dump chain code service
+  rpc SaveDumpInfo (DumpInfoRequest) returns (Response);
+  rpc DeleteDumpInfo (KeyDumpInfoRequest) returns (Response);
+  rpc DeleteTable (KeyDumpInfoRequest) returns (Response);
+  rpc UpdateDumpInfoOverwrite (DumpInfoRequest) returns (Response);
+  rpc UpdateDumpInfoOverlay (DumpInfoRequest) returns (Response);
+  rpc QueryDumpInfo (QueryDumpInfoByIdRequest) returns (Response);
+  rpc QueryDumpAccurateInfo (KeyDumpInfoRequest) returns (Response);
+  rpc QueryDumpInfoByKeywords (QueryDumpInfoByKeywordsRequest) returns (Response);
+  rpc QueryRecentlyDumpInfo (QueryRecentlyDumpInfoRequest) returns (Response);
+  rpc QueryOwnerDumpInfo (QueryOwnerDumpInfoRequest) returns (Response);
+
+  rpc GetStepNumber (GetStepNumberRequest) returns (GetStepNumberResponse);
+  rpc QueryPurchased (QueryPurchasedRequest) returns (Response);
+
+  // sql查询返回结果集
+  rpc ViewSqlResult (ViewSqlResultRequest) returns (ViewSqlResponse);
+}

@@ -2,6 +2,7 @@ package controller
 
 import (
 	"net/http"
+	_ "testGin/docs"
 	"testGin/httputil"
 	"testGin/micro"
 	"testGin/model"

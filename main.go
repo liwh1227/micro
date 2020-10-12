@@ -11,7 +11,7 @@ import (
 // @title DataShare Api
 // @version 1.0
 // @description 铭数数据共享平台v1.0 Api
-// @contact.name 铭数区块链
+// @contact.name 铭数区块链组
 // @contact.email liweihang@mingbyte.com
 
 // @host localhost:10086
